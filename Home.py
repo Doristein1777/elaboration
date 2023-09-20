@@ -93,12 +93,12 @@ def whole_openai_call(FormattedPrompt, model="gpt-4", temperature=1):
 def combine_page_contents(documents):
     return "\n".join(doc.page_content for doc in documents)
 
-def assemble_prompt(prompt_text, input_param_1_value=None, input_param_2_value=None, input_param_3_value=None, kb1_db=None, kb2_db=None, num_results=5):
+def assemble_prompt(prompt_text, input_param_1_value=None, input_param_2_value=None, input_param_3_value=None, input_param_4_value=None, input_param_5_value=None, kb1_db=None, kb2_db=None, num_results=5):
 
     formatted_prompt = prompt_text
 
     # Add input parameters if they exist
-    params = [input_param_1_value, input_param_2_value, input_param_3_value]
+    params = [input_param_1_value, input_param_2_value, input_param_3_value, input_param_4_value, input_param_5_value]
     for index, param in enumerate(params, start=1):
         if param:
             formatted_prompt += '\n\n[Param {}]\n\n{}'.format(index, param)
@@ -227,9 +227,13 @@ temperature = st.slider("Temperature", min_value=0.0, max_value=2.0, step=0.01, 
 input_param_1_value = df[df["Prompt_ID"] == selected_question]["Input_Param 1"].iloc[0]
 input_param_2_value = df[df["Prompt_ID"] == selected_question]["Input_Param 2"].iloc[0]
 input_param_3_value = df[df["Prompt_ID"] == selected_question]["Input_Param 3"].iloc[0]
+input_param_4_value = df[df["Prompt_ID"] == selected_question]["Input_Param 4"].iloc[0]
+input_param_5_value = df[df["Prompt_ID"] == selected_question]["Input_Param 5"].iloc[0]
 optional_input_1 = ""
 optional_input_2 = ""
 optional_input_3 = ""
+optional_input_4 = ""
+optional_input_5 = ""
 
 # Check and display st.text_area for each Input_Param if it exists
 if pd.notna(input_param_1_value):
@@ -240,6 +244,12 @@ if pd.notna(input_param_2_value):
     
 if pd.notna(input_param_3_value):
     optional_input_3 = st.text_area("Input_Param 3", value=input_param_3_value)
+
+if pd.notna(input_param_4_value):
+    optional_input_4 = st.text_area("Input_Param 4", value=input_param_4_value)
+
+if pd.notna(input_param_5_value):
+    optional_input_5 = st.text_area("Input_Param 5", value=input_param_5_value)
 
 secondary_pdf = st.file_uploader("Knowledge Base 2")
 
@@ -303,6 +313,8 @@ data = {
     "Input Param 1": [optional_input_1],
     "Input Param 2": [optional_input_2],
     "Input Param 3": [optional_input_3],
+    "Input Param 4": [optional_input_4],
+    "Input Param 5": [optional_input_5],
     "Full Prompt Tokens": [total_tokens],
     "Output": [answer],
     "Output Tokens": [completion_tokens],
