@@ -218,6 +218,9 @@ prompt_text = st.text_area("Full Prompt", selected_prompt_text, height=400)
 # Grab more info for the final dataframe
 selected_prompt_index = df[df["Prompt_ID"] == selected_question]["Prompt Index"].iloc[0]
 
+# Grab more info for the final dataframe
+selected_prompt_type = df[df["Prompt_ID"] == selected_question]["Prompt Type"].iloc[0]
+
 # Parameters
 st.subheader("Parameters")
 model = st.selectbox("Model", ["gpt-3.5-turbo", "gpt-4"], index=1)
@@ -288,7 +291,7 @@ kb2_db = st.session_state.kb2_db
 answer = ""
 # Querying will be done when "Run Prompt" button is clicked
 if st.button("Run Prompt"):
-    formatted_prompt = assemble_prompt(prompt_text, optional_input_1, optional_input_2, optional_input_3, kb1_db, kb2_db)
+    formatted_prompt = assemble_prompt(prompt_text, optional_input_1, optional_input_2, optional_input_3, optional_input_4, optional_input_5, kb1_db, kb2_db)
     openai_response = whole_openai_call(formatted_prompt, model, temperature)
     if openai_response:
         answer = openai_response['message_content']
@@ -306,10 +309,10 @@ output_word_count = len(str(answer).split())
 
 data = {
     "Prompt Index": [selected_prompt_index],
+    "Prompt_Type": [selected_prompt_type],
     "Prompt_ID": [matching_prompt_name_text],
     "Question": [matching_question_text],
-    "Model": [model],
-    "Temperature": [temperature],
+    "Prompt Text": [prompt_text],
     "Input Param 1": [optional_input_1],
     "Input Param 2": [optional_input_2],
     "Input Param 3": [optional_input_3],
@@ -317,9 +320,23 @@ data = {
     "Input Param 5": [optional_input_5],
     "Full Prompt Tokens": [total_tokens],
     "Output": [answer],
+    "First Item": "",
+    "Second Item": "",
+    "List Hierarchy": "",
+    "Pref Language": "",
+    "Pref Word Count": "",
+    "Actual Word Count": "",
+    "Info Provided": "",
+    "Model": [model],
+    "Temperature": [temperature],
+    "File Doc Link": "",
+    "File Doc Link 2": "",
+    "Update?": "",
+    "Question English": "",
     "Output Tokens": [completion_tokens],
     "Output Characters": [len(str(answer))],
-    "Output Word Count": [output_word_count]    # 2. Add the computed word count
+    "Output Word Count": [output_word_count],
+
 }
 
 output_data = pd.DataFrame(data)
