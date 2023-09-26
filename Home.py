@@ -19,7 +19,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from PIL import Image
 import time
 
-OPENAI_API_KEY = st.secrets.OPENAI_API_KEY
+openai.api_key = st.secrets.OPENAI_API_KEY
 
 # Initialize vars
 prompt_tokens = ""
